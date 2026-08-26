@@ -72,7 +72,7 @@
     inset:0;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
+    justify-content:flex-start;
     padding:clamp(1.5rem,4vw,4rem);
     padding-bottom:clamp(4rem,8vw,5.5rem);
     overflow-y:auto;
@@ -233,8 +233,11 @@
     gap:.3rem;
   }
   .credit{
+    margin-top:auto;
+    align-self:flex-end;
+    padding-bottom:1rem;
     font-family:'IBM Plex Mono', monospace;
-    font-size:.76rem;
+    font-size:.8rem;
     letter-spacing:.02em;
     color:var(--ink-soft);
   }
@@ -425,6 +428,8 @@
 
   <div class="waveform" aria-hidden="true"></div>
 
+  <div class="credit">SOC IP 개발팀 · 서동준</div>
+
   <div class="footerbar">
     <div class="pillrow">
       <span class="pill">Background Survey</span>
@@ -432,10 +437,7 @@
       <span class="pill">출제 구조</span>
       <span class="pill">실전 플랜</span>
     </div>
-    <div class="counter-block">
-      <div class="credit">SOC IP 개발팀 · 서동준</div>
-      <div class="counter">01 / 28</div>
-    </div>
+    <div class="counter">01 / 28</div>
   </div>
 </section>
 
