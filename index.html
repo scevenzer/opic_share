@@ -517,6 +517,84 @@
   @media (max-width: 820px){
     .grade-row{ grid-template-columns:1fr; }
   }
+
+  /* scoring: 4 axes + deduction callout */
+  .axis-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.04em;
+    color:var(--accent);
+    text-transform:uppercase;
+    margin-bottom:.7rem;
+  }
+  .axis-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:1rem;
+  }
+  .axis-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:1.1rem 1.1rem;
+  }
+  .axis-card .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    color:var(--ink-soft);
+  }
+  .axis-card .name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.15rem;
+    color:var(--ink);
+    margin:.35rem 0 .4rem;
+    line-height:1.25;
+  }
+  .axis-card .desc{ font-size:.92rem; color:var(--ink-soft); line-height:1.45; }
+
+  .deduct-banner{
+    display:flex;
+    align-items:baseline;
+    gap:1.2rem;
+    flex-wrap:wrap;
+    background:var(--accent-soft);
+    border-radius:10px;
+    padding:1.2rem 1.4rem;
+  }
+  .deduct-banner .headline{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.3rem;
+    color:var(--ink);
+  }
+  .deduct-banner .sub{
+    font-size:.96rem;
+    color:var(--ink-soft);
+  }
+
+  .speculative-note{
+    display:flex;
+    align-items:baseline;
+    gap:.6rem;
+    font-size:.86rem;
+    color:var(--ink-soft);
+  }
+  .speculative-note .flag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.68rem;
+    letter-spacing:.03em;
+    color:var(--gold);
+    border:1px solid var(--gold-soft);
+    background:var(--gold-soft);
+    border-radius:5px;
+    padding:.15em .5em;
+    white-space:nowrap;
+  }
+
+  @media (max-width: 900px){
+    .axis-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -736,24 +814,46 @@
 </section>
 
 <section class="slide content">
-  <h2 style="max-width:20ch;">등급, 세 구간만 본다.</h2>
+  <h2 style="max-width:16ch;">채점, 핵심은 둘.</h2>
 
   <div class="body">
-    <div class="grade-row">
-      <div class="grade-card">
-        <div class="code">IM1–IM2</div>
-        <div class="desc">짧은 문장. 생존형 의사소통은 되지만 디테일과 논리 전개가 약함.</div>
+    <div class="axis-label">① 4가지 축</div>
+    <div class="axis-grid">
+      <div class="axis-card">
+        <div class="num">01</div>
+        <div class="name">Global Tasks</div>
+        <div class="desc">질문이 요구한 과제(묘사·비교·설명·문제해결)를 실제로 수행했는가</div>
       </div>
-      <div class="grade-card goal">
-        <div class="code">IM3–IH</div>
-        <div class="desc">문단 단위 서술. 경험담을 시간순으로 풀어냄. IH부터 스토리텔링이 자연스러워짐.</div>
-        <span class="tag">실무 목표 구간</span>
+      <div class="axis-card">
+        <div class="num">02</div>
+        <div class="name">Context & Content</div>
+        <div class="desc">맥락에 맞는, 관련성 있는 내용으로 답했는가</div>
       </div>
-      <div class="grade-card stretch">
-        <div class="code">AL</div>
-        <div class="desc">예상치 못한 질문에도 복문·논리적 전개로 대응. 비교·설명·설득이 유기적으로 이어짐.</div>
-        <span class="tag">도전 구간</span>
+      <div class="axis-card">
+        <div class="num">03</div>
+        <div class="name">Accuracy</div>
+        <div class="desc">문법·어휘·발음이 정확하고 전달력 있는가</div>
       </div>
+      <div class="axis-card">
+        <div class="num">04</div>
+        <div class="name">Text Type</div>
+        <div class="desc">단어 나열 → 단문 → 문단 → 복문 담화, 어디에 해당하는가</div>
+      </div>
+    </div>
+
+    <div style="height:1.3rem"></div>
+
+    <div class="axis-label">② 감점제</div>
+    <div class="deduct-banner">
+      <span class="headline">평가자 3명 · 가산 아니라 감점</span>
+      <span class="sub">잘한 걸 더해주지 않는다 — 놓친 걸 깎는다. 체크리스트를 빠짐없이 채우는 게 핵심.</span>
+    </div>
+
+    <div style="height:1rem"></div>
+
+    <div class="speculative-note">
+      <span class="flag">추측</span>
+      <span>SAIL은 피드백이 문법적인 요소 위주로 많고, 유창성·발음 평가는 상대적으로 약해 보임.</span>
     </div>
   </div>
 
