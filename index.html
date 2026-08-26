@@ -374,21 +374,22 @@
   .pick-list{ display:flex; flex-direction:column; }
   .pick-row{
     display:grid;
-    grid-template-columns: 7em 1fr;
+    grid-template-columns: 8em 1fr;
     gap:1rem;
-    padding:.7rem 0;
+    padding:.9rem 0;
     border-bottom:1px solid var(--border);
   }
   .pick-row:first-child{ border-top:1px solid var(--border); }
   .pick-cat{
     font-family:'IBM Plex Mono', monospace;
-    font-size:.76rem;
+    font-size:.86rem;
     letter-spacing:.03em;
     color:var(--ink-soft);
-    padding-top:.15rem;
+    padding-top:.2rem;
   }
-  .pick-val{ font-size:.96rem; color:var(--ink); line-height:1.5; }
+  .pick-val{ font-size:1.18rem; color:var(--ink); line-height:1.5; }
   .pick-val b{ color:var(--accent); font-weight:600; }
+  .pick-vlist{ display:flex; flex-direction:column; gap:.25rem; }
 
   .photo-card{
     background:var(--surface);
@@ -565,8 +566,15 @@
           <span class="pick-val">가족 <b>(배우자·자녀)</b>과 함께 거주</span>
         </div>
         <div class="pick-row">
-          <span class="pick-cat">여가활동</span>
-          <span class="pick-val">영화보기, 콘서트보기, 공원가기, 해변가기, 술집/바에 가기, 카페/커피전문점에 가기 <b>(6개)</b></span>
+          <span class="pick-cat">여가활동 <b>(6개)</b></span>
+          <span class="pick-val pick-vlist">
+            <span>영화보기</span>
+            <span>콘서트보기</span>
+            <span>공원가기</span>
+            <span>해변가기</span>
+            <span>술집/바에 가기</span>
+            <span>카페/커피전문점에 가기</span>
+          </span>
         </div>
         <div class="pick-row">
           <span class="pick-cat">취미</span>
