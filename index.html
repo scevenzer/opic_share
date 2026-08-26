@@ -374,22 +374,27 @@
   .pick-list{ display:flex; flex-direction:column; }
   .pick-row{
     display:grid;
-    grid-template-columns: 8em 1fr;
+    grid-template-columns: 7.5em 1fr;
     gap:1rem;
-    padding:.9rem 0;
+    padding:.5rem 0;
     border-bottom:1px solid var(--border);
   }
   .pick-row:first-child{ border-top:1px solid var(--border); }
   .pick-cat{
     font-family:'IBM Plex Mono', monospace;
-    font-size:.86rem;
+    font-size:.78rem;
     letter-spacing:.03em;
     color:var(--ink-soft);
     padding-top:.2rem;
   }
-  .pick-val{ font-size:1.18rem; color:var(--ink); line-height:1.5; }
+  .pick-val{ font-size:1.02rem; color:var(--ink); line-height:1.4; }
   .pick-val b{ color:var(--accent); font-weight:600; }
-  .pick-vlist{ display:flex; flex-direction:column; gap:.25rem; }
+  .pick-vlist{
+    display:grid;
+    grid-template-columns: repeat(2, auto);
+    column-gap:1.5rem;
+    row-gap:.15rem;
+  }
 
   .photo-card{
     background:var(--surface);
@@ -400,6 +405,8 @@
   }
   .photo-card img{
     width:100%;
+    max-height:52vh;
+    object-fit:contain;
     display:block;
     border-radius:6px;
     border:1px solid var(--border);
