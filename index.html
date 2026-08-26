@@ -461,9 +461,13 @@
   }
   .topic-tag:hover{ background:var(--surface-2); }
   .topic-tag .emoji{ font-size:1.15rem; }
-  .topic-empty{
-    font-size:.92rem;
+  .topic-tag.empty{ color:var(--ink-soft); cursor:default; }
+  .topic-tag.empty:hover{ background:none; }
+  .topic-tag .blank{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
     color:var(--ink-soft);
+    margin-left:.15rem;
   }
 
   @media (max-width: 980px){
@@ -645,13 +649,13 @@
         <div class="topic-tags">
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=1" target="_blank" rel="noopener"><span class="emoji">🏠</span>집</a>
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=22" target="_blank" rel="noopener"><span class="emoji">👨‍👩‍👧</span>가족 (역할 분담)</a>
-          <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=2" target="_blank" rel="noopener"><span class="emoji">♻️</span>분리수거</a>
         </div>
       </div>
       <div class="topic-card">
         <div class="cat">여가활동</div>
         <div class="topic-tags">
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=17" target="_blank" rel="noopener"><span class="emoji">🎬</span>영화</a>
+          <span class="topic-tag empty"><span class="emoji">🎤</span>콘서트<span class="blank">(비어있음)</span></span>
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=28" target="_blank" rel="noopener"><span class="emoji">🌳</span>공원</a>
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=29" target="_blank" rel="noopener"><span class="emoji">🏖️</span>해변</a>
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=27" target="_blank" rel="noopener"><span class="emoji">🍺</span>술집</a>
@@ -667,7 +671,8 @@
       <div class="topic-card">
         <div class="cat">운동</div>
         <div class="topic-tags">
-          <span class="topic-empty">준비된 토픽 없음</span>
+          <span class="topic-tag empty"><span class="emoji">🚶</span>걷기<span class="blank">(비어있음)</span></span>
+          <span class="topic-tag empty"><span class="emoji">🏃</span>조깅<span class="blank">(비어있음)</span></span>
         </div>
       </div>
       <div class="topic-card">
