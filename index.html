@@ -474,6 +474,33 @@
     .topic-grid{ grid-template-columns: repeat(2, 1fr); }
   }
 
+  /* surprise-topic chip row */
+  .chip-section{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--border); }
+  .chip-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    letter-spacing:.03em;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:.65rem;
+  }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:.55rem; }
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:.4rem;
+    font-size:.92rem;
+    color:var(--ink);
+    text-decoration:none;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:.4rem .85rem .4rem .6rem;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .chip:hover{ background:var(--gold-soft); border-color:var(--gold); }
+  .chip .emoji{ font-size:1rem; }
+
   /* grade scale */
   .grade-row{
     display:grid;
@@ -884,7 +911,7 @@
 </section>
 
 <section class="slide content">
-  <h2 style="max-width:20ch;">선택주제 연결</h2>
+  <h2 style="max-width:20ch;">주제</h2>
 
   <div class="body">
     <div class="topic-grid">
@@ -925,6 +952,24 @@
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=31" target="_blank" rel="noopener"><span class="emoji">🏡</span>집에서 보내는 휴가</a>
           <a class="topic-tag" href="https://www.admin1004.com/opic_study/?topic=30" target="_blank" rel="noopener"><span class="emoji">🧳</span>국내여행</a>
         </div>
+      </div>
+    </div>
+
+    <div class="chip-section">
+      <div class="chip-label">돌발주제</div>
+      <div class="chip-row">
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=23" target="_blank" rel="noopener"><span class="emoji">🏘️</span>동네</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=25" target="_blank" rel="noopener"><span class="emoji">🏦</span>은행</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=26" target="_blank" rel="noopener"><span class="emoji">🏨</span>호텔</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=32" target="_blank" rel="noopener"><span class="emoji">🪑</span>가구</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=33" target="_blank" rel="noopener"><span class="emoji">📱</span>기술</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=34" target="_blank" rel="noopener"><span class="emoji">🎊</span>명절</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=55" target="_blank" rel="noopener"><span class="emoji">🎪</span>지역행사</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=56" target="_blank" rel="noopener"><span class="emoji">🚌</span>교통수단</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=57" target="_blank" rel="noopener"><span class="emoji">⛅</span>날씨</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=58" target="_blank" rel="noopener"><span class="emoji">⛰️</span>지형</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=59" target="_blank" rel="noopener"><span class="emoji">🎡</span>여가시간</a>
+        <a class="chip" href="https://www.admin1004.com/opic_study/?topic=60" target="_blank" rel="noopener"><span class="emoji">👗</span>옷차림</a>
       </div>
     </div>
   </div>
