@@ -535,42 +535,42 @@
   .axis-card{
     background:var(--surface);
     border:1px solid var(--border);
-    border-radius:10px;
-    padding:1.1rem 1.1rem;
+    border-radius:12px;
+    padding:1.8rem 1.6rem;
   }
   .axis-card .num{
     font-family:'IBM Plex Mono', monospace;
-    font-size:.76rem;
+    font-size:.85rem;
     color:var(--ink-soft);
   }
   .axis-card .name{
     font-family:'Fraunces', serif;
     font-weight:600;
-    font-size:1.15rem;
+    font-size:1.5rem;
     color:var(--ink);
-    margin:.35rem 0 .4rem;
-    line-height:1.25;
+    margin:.6rem 0 .7rem;
+    line-height:1.2;
   }
-  .axis-card .desc{ font-size:.92rem; color:var(--ink-soft); line-height:1.45; }
+  .axis-card .desc{ font-size:1.05rem; color:var(--ink-soft); line-height:1.5; }
 
   .deduct-banner{
     display:flex;
-    align-items:baseline;
-    gap:1.2rem;
-    flex-wrap:wrap;
+    flex-direction:column;
+    gap:.6rem;
     background:var(--accent-soft);
-    border-radius:10px;
-    padding:1.2rem 1.4rem;
+    border-radius:12px;
+    padding:2rem 2.2rem;
   }
   .deduct-banner .headline{
     font-family:'Fraunces', serif;
     font-weight:600;
-    font-size:1.3rem;
+    font-size:1.9rem;
     color:var(--ink);
   }
   .deduct-banner .sub{
-    font-size:.96rem;
+    font-size:1.1rem;
     color:var(--ink-soft);
+    max-width:60ch;
   }
 
   .speculative-note{
@@ -816,40 +816,40 @@
 <section class="slide content">
   <h2 style="max-width:16ch;">채점, 핵심은 둘.</h2>
 
-  <div class="body">
-    <div class="axis-label">① 4가지 축</div>
-    <div class="axis-grid">
-      <div class="axis-card">
-        <div class="num">01</div>
-        <div class="name">Global Tasks</div>
-        <div class="desc">질문이 요구한 과제(묘사·비교·설명·문제해결)를 실제로 수행했는가</div>
-      </div>
-      <div class="axis-card">
-        <div class="num">02</div>
-        <div class="name">Context & Content</div>
-        <div class="desc">맥락에 맞는, 관련성 있는 내용으로 답했는가</div>
-      </div>
-      <div class="axis-card">
-        <div class="num">03</div>
-        <div class="name">Accuracy</div>
-        <div class="desc">문법·어휘·발음이 정확하고 전달력 있는가</div>
-      </div>
-      <div class="axis-card">
-        <div class="num">04</div>
-        <div class="name">Text Type</div>
-        <div class="desc">단어 나열 → 단문 → 문단 → 복문 담화, 어디에 해당하는가</div>
+  <div class="body" style="justify-content:center; gap:2.2rem;">
+    <div>
+      <div class="axis-label">① 4가지 축</div>
+      <div class="axis-grid">
+        <div class="axis-card">
+          <div class="num">01</div>
+          <div class="name">Global Tasks</div>
+          <div class="desc">질문이 요구한 과제(묘사·비교·설명·문제해결)를 실제로 수행했는가</div>
+        </div>
+        <div class="axis-card">
+          <div class="num">02</div>
+          <div class="name">Context & Content</div>
+          <div class="desc">맥락에 맞는, 관련성 있는 내용으로 답했는가</div>
+        </div>
+        <div class="axis-card">
+          <div class="num">03</div>
+          <div class="name">Accuracy</div>
+          <div class="desc">문법·어휘·발음이 정확하고 전달력 있는가</div>
+        </div>
+        <div class="axis-card">
+          <div class="num">04</div>
+          <div class="name">Text Type</div>
+          <div class="desc">단어 나열 → 단문 → 문단 → 복문 담화, 어디에 해당하는가</div>
+        </div>
       </div>
     </div>
 
-    <div style="height:1.3rem"></div>
-
-    <div class="axis-label">② 감점제</div>
-    <div class="deduct-banner">
-      <span class="headline">평가자 3명 · 가산 아니라 감점</span>
-      <span class="sub">잘한 걸 더해주지 않는다 — 놓친 걸 깎는다. 체크리스트를 빠짐없이 채우는 게 핵심.</span>
+    <div>
+      <div class="axis-label">② 감점제</div>
+      <div class="deduct-banner">
+        <span class="headline">평가자 3명 · 가산 아니라 감점</span>
+        <span class="sub">잘한 걸 더해주지 않는다 — 놓친 걸 깎는다. 체크리스트를 빠짐없이 채우는 게 핵심.</span>
+      </div>
     </div>
-
-    <div style="height:1rem"></div>
 
     <div class="speculative-note">
       <span class="flag">추측</span>
