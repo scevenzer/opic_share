@@ -191,10 +191,10 @@
   }
 
   .lede{
-    font-size:clamp(1.05rem,1.6vw,1.3rem);
+    font-size:clamp(1.15rem,1.9vw,1.45rem);
     color:var(--ink-soft);
     max-width:44ch;
-    line-height:1.55;
+    line-height:1.5;
   }
 
   .footerbar{
@@ -274,7 +274,7 @@
     max-width:20ch;
   }
   .slide.content .lede{ margin-top:-.6rem; }
-  .slide.content .body{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .slide.content .body{ flex:1; display:flex; flex-direction:column; justify-content:flex-start; padding-top:.5rem; }
 
   /* agenda list */
   .agenda-list{ display:flex; flex-direction:column; border-top:1px solid var(--border); max-width:760px; }
@@ -341,12 +341,12 @@
 
   /* data table */
   .table-wrap{ overflow-x:auto; max-width:820px; }
-  .data-table{ width:100%; border-collapse:collapse; font-size:.94rem; }
+  .data-table{ width:100%; border-collapse:collapse; font-size:1.12rem; }
   .data-table th{
     font-family:'IBM Plex Mono', monospace;
     text-transform:uppercase;
     letter-spacing:.05em;
-    font-size:.7rem;
+    font-size:.8rem;
     color:var(--ink-soft);
     text-align:left;
     padding:.55rem .8rem;
@@ -354,7 +354,7 @@
     white-space:nowrap;
   }
   .data-table td{
-    padding:.75rem .8rem;
+    padding:1rem .9rem;
     border-bottom:1px solid var(--border);
     vertical-align:top;
     color:var(--ink);
@@ -528,29 +528,6 @@
   <p class="lede" style="margin-top:-1rem;">설문에서 고른 게 문제 범위가 된다.<br>문항 구성도 정해진 틀을 따른다.</p>
 
   <div class="body">
-    <div class="step-row">
-      <div class="step"><div class="num">01</div><div class="q">선택 전략</div></div>
-      <div class="step"><div class="num">02</div><div class="q">채점 기준</div></div>
-      <div class="step"><div class="num">03</div><div class="q">출제 구조</div></div>
-      <div class="step"><div class="num">04</div><div class="q">실전 플랜</div></div>
-    </div>
-  </div>
-
-  <div class="footerbar">
-    <div class="pillrow">
-      <span class="pill">ACTFL 주관</span>
-      <span class="pill">컴퓨터 기반</span>
-      <span class="pill">약 40분</span>
-      <span class="pill">등급제</span>
-    </div>
-    <div class="counter">04 / 28</div>
-  </div>
-</section>
-
-<section class="slide content">
-  <h2 style="max-width:16ch;">실제로 고른 항목</h2>
-
-  <div class="body">
     <div class="split">
       <div class="pick-list">
         <div class="pick-row">
@@ -602,7 +579,7 @@
       <span class="pill">4~7번 합계 12개 (설문지 규정)</span>
       <span class="pill">카테고리당 실제 출제는 1개뿐</span>
     </div>
-    <div class="counter">05 / 28</div>
+    <div class="counter">04 / 28</div>
   </div>
 </section>
 
