@@ -595,6 +595,52 @@
   @media (max-width: 900px){
     .axis-grid{ grid-template-columns: repeat(2, 1fr); }
   }
+
+  /* question-structure segmented bar */
+  .struct-row{
+    display:flex;
+    align-items:stretch;
+    gap:.6rem;
+    width:100%;
+  }
+  .struct-seg{
+    flex:1;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-top:4px solid var(--border);
+    border-radius:10px;
+    padding:1.4rem 1rem;
+    text-align:center;
+  }
+  .struct-seg.combo1{ border-top-color:var(--accent); }
+  .struct-seg.combo2{ border-top-color:var(--accent); }
+  .struct-seg.roleplay{ border-top-color:var(--ink-soft); }
+  .struct-seg.last{ border-top-color:var(--gold); }
+  .struct-seg .nums{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:clamp(1.3rem,2.4vw,1.8rem);
+    color:var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .struct-seg .label{
+    margin-top:.6rem;
+    font-size:.92rem;
+    color:var(--ink-soft);
+    line-height:1.35;
+  }
+  .struct-total{
+    margin-top:1.4rem;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+
+  @media (max-width: 900px){
+    .struct-row{ flex-wrap:wrap; }
+    .struct-seg{ flex:1 1 30%; }
+  }
 </style>
 </head>
 <body>
@@ -860,6 +906,45 @@
   <div class="footerbar">
     <div class="pillrow"></div>
     <div class="counter">06 / 28</div>
+  </div>
+</section>
+
+<section class="slide content">
+  <h2 style="max-width:16ch;">문항은 6묶음.</h2>
+
+  <div class="body" style="justify-content:center;">
+    <div class="struct-row">
+      <div class="struct-seg">
+        <div class="nums">1</div>
+        <div class="label">자기소개</div>
+      </div>
+      <div class="struct-seg combo1">
+        <div class="nums">2·3·4</div>
+        <div class="label">콤보1</div>
+      </div>
+      <div class="struct-seg combo2">
+        <div class="nums">5·6·7</div>
+        <div class="label">콤보2</div>
+      </div>
+      <div class="struct-seg combo2">
+        <div class="nums">8·9·10</div>
+        <div class="label">콤보2</div>
+      </div>
+      <div class="struct-seg roleplay">
+        <div class="nums">11·12·13</div>
+        <div class="label">롤플레이</div>
+      </div>
+      <div class="struct-seg last">
+        <div class="nums">14·15</div>
+        <div class="label">마지막 2문항</div>
+      </div>
+    </div>
+    <div class="struct-total">총 15문항 · 묶음 크기(1-3-3-3-3-2)는 고정</div>
+  </div>
+
+  <div class="footerbar">
+    <div class="pillrow"></div>
+    <div class="counter">07 / 28</div>
   </div>
 </section>
 
