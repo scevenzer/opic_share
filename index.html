@@ -226,6 +226,19 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .counter-block{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:.3rem;
+  }
+  .credit{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.76rem;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+  }
+
   .note{
     position:fixed;
     top:14px; left:50%;
@@ -401,6 +414,7 @@
 </style>
 </head>
 <body>
+
 <div class="deck">
 
 <section class="slide">
@@ -418,7 +432,10 @@
       <span class="pill">출제 구조</span>
       <span class="pill">실전 플랜</span>
     </div>
-    <div class="counter">01 / 28</div>
+    <div class="counter-block">
+      <div class="credit">SOC IP 개발팀 · 서동준</div>
+      <div class="counter">01 / 28</div>
+    </div>
   </div>
 </section>
 
