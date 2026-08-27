@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OPIc 학습</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface2: #F1F5F9;
+      --primary: #4F46E5;
+      --primary-light: #EEF2FF;
+      --success: #10B981;
+      --success-light: #D1FAE5;
+      --warning-bg: #FFF7ED;
+      --warning-border: #FED7AA;
+      --text: #0F172A;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; min-height: 100vh; padding-bottom: 24px; }
+    .screen.active { display: block; }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0;
+      background: var(--surface);
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header h2 { font-size: 16px; font-weight: 600; flex: 1; }
+    .btn-back {
+      background: none; border: none;
+      font-size: 22px; cursor: pointer;
+      color: var(--primary); padding: 2px 4px;
+      line-height: 1;
+    }
+
+    /* ── Progress Card ── */
+    .progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 12px 16px 4px;
+    }
+    .progress-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .progress-row strong { color: var(--text); }
+    .progress-bar {
+      background: var(--surface2);
+      border-radius: 999px; height: 6px; overflow: hidden;
+    }
+    .progress-fill {
+      background: var(--success); height: 100%;
+      border-radius: 999px; transition: width 0.4s ease;
+    }
+
+    /* ── Topic Grid ── */
+    .topic-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; padding: 12px 16px;
+    }
+    .topic-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .topic-card:active { transform: scale(0.96); }
+    .topic-emoji { font-size: 26px; display: block; margin-bottom: 6px; }
+    .topic-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .topic-count { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .topic-bar { background: var(--surface2); border-radius: 999px; height: 4px; overflow: hidden; }
+    .topic-bar-fill { background: var(--success); height: 100%; border-radius: 999px; }
+
+    /* ── Question List ── */
+    .q-list { padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .q-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 14px;
+      display: flex; align-items: flex-start; gap: 12px;
+      cursor: pointer; transition: background 0.1s;
+    }
+    .q-item.done { background: #F0FDF4; border-color: #BBF7D0; }
+    .q-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid var(--border); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; margin-top: 1px;
+    }
+    .q-item.done .q-check { background: var(--success); border-color: var(--success); color: white; }
+    .q-body { flex: 1; min-width: 0; }
+    .q-tag {
+      font-size: 10px; font-weight: 700;
+      color: var(--primary); background: var(--primary-light);
+      padding: 2px 7px; border-radius: 4px;
+      display: inline-block; margin-bottom: 4px;
+    }
+    .q-tag.roleplay { color: #B45309; background: #FEF3C7; }
+    .q-preview {
+      font-size: 13px; color: var(--muted);
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .q-arrow { color: var(--muted); font-size: 16px; margin-top: 2px; align-self: center; }
+
+    /* ── Question Detail Header ── */
+    .q-detail-header {
+      position: sticky; top: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .q-detail-top {
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .q-detail-type { font-size: 13px; color: var(--muted); flex: 1; }
+    .q-detail-num { font-size: 12px; font-weight: 700; color: var(--primary); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; border-top: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px 4px;
+      background: none; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .category-tabs { margin: 4px 16px 0; border-top: none; border-bottom: 1px solid var(--border); }
+    .category-tabs .tab-btn { font-size: 11px; padding: 10px 2px; }
+
+    /* ── Tab Panes ── */
+    .tab-pane { display: none; padding: 16px; }
+    .tab-pane.active { display: block; }
+
+    /* 문제 tab */
+    .q-translation-box {
+      background: var(--primary-light);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 16px; font-weight: 600; line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .q-english-text {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.7; margin-bottom: 20px;
+      font-style: italic;
+    }
+    .structure-heading {
+      font-size: 12px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .structure-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .structure-item {
+      font-size: 13px; color: var(--text);
+      padding: 8px 12px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--primary);
+    }
+
+    /* 스크립트 tab */
+    .tts-btn {
+      width: 100%; padding: 11px;
+      background: var(--primary); color: white;
+      border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s;
+    }
+    .tts-btn.playing { background: #EF4444; }
+    .tts-settings { display: flex; gap: 10px; margin-bottom: 10px; }
+    .tts-settings label {
+      flex: 1; font-size: 11px; color: var(--muted);
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .tts-settings select {
+      padding: 6px 8px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 13px; background: white; color: var(--text);
+    }
+    .sentence-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .sentence-en {
+      padding: 12px 14px;
+      font-size: 14px; line-height: 1.6;
+      background: white;
+    }
+    .sentence-ko {
+      padding: 10px 14px;
+      font-size: 13px; color: var(--muted);
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .sentence-ko.visible { display: block; }
+    .btn-show-ko {
+      width: 100%; padding: 7px;
+      background: none; border: none;
+      border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--muted);
+      cursor: pointer; text-align: center;
+    }
+    .no-content {
+      text-align: center; padding: 48px 20px;
+      color: var(--muted); font-size: 14px;
+    }
+    .no-content-icon { font-size: 36px; margin-bottom: 12px; }
+
+    /* 발음 tab */
+    .pron-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm); overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .pron-en {
+      padding: 8px 12px;
+      font-size: 12px; color: var(--muted);
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .pron-ko {
+      padding: 10px 12px;
+      font-size: 15px; font-weight: 500;
+      background: white;
+    }
+
+    /* ── 형광펜 하이라이트 ── */
+    mark.hl {
+      background: #FDE68A;
+      padding: 4px 2px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .sel-popup {
+      position: fixed;
+      display: none;
+      z-index: 500;
+      background: #1F2937;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+    .sel-popup.visible { display: flex; }
+    .sel-popup button {
+      border: none; background: none; color: white;
+      font-size: 13px; font-weight: 600;
+      padding: 9px 14px;
+      cursor: pointer; white-space: nowrap;
+    }
+    .sel-popup button:active { background: rgba(255,255,255,0.15); }
+    .sel-popup .sel-popup-divider { width: 1px; background: rgba(255,255,255,0.2); }
+    .sentence-top, .pron-top {
+      display: flex; align-items: flex-start; gap: 4px;
+    }
+    .sentence-top .sentence-en { flex: 1; }
+    .pron-top .pron-en, .pron-top .pron-ko { flex: 1; }
+    .sentence-actions {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .flag-btn, .clear-hl-btn, .sentence-tts-btn {
+      flex-shrink: 0;
+      border: none; background: none;
+      cursor: pointer;
+      font-size: 14px; padding: 5px 8px;
+      color: var(--muted); opacity: 0.5;
+    }
+    .flag-btn.flagged { opacity: 1; color: #DC2626; }
+    .clear-hl-btn { opacity: 0.6; }
+    .sentence-tts-btn.playing { opacity: 1; color: var(--primary); }
+    /* 전체 듣기 재생 중에는 문장별 재생 버튼을 완전히 숨긴다 (동시 재생 방지) */
+    body.tts-playing .sentence-tts-btn { display: none; }
+    .sentence-card.flagged .sentence-en,
+    .pron-card.flagged .pron-en,
+    .pron-card.flagged .pron-ko {
+      background: #FEF2F2;
+    }
+    .sentence-card.flagged, .pron-card.flagged {
+      border-color: #F87171;
+    }
+    .warnings-box {
+      margin-top: 16px;
+      background: var(--warning-bg); border: 1px solid var(--warning-border);
+      border-radius: var(--radius); padding: 12px;
+    }
+    .warnings-title {
+      font-size: 11px; font-weight: 700;
+      color: #92400E; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 10px;
+    }
+    .warning-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; padding: 5px 0;
+      border-bottom: 1px solid var(--warning-border);
+    }
+    .warning-row:last-child { border-bottom: none; }
+    .warning-word { font-weight: 600; color: #B45309; }
+    .warning-guide { color: #78350F; }
+
+    /* ── Bottom Bar ── */
+    .bottom-bar {
+      position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: white; border-top: 1px solid var(--border);
+      padding: 10px 16px 12px;
+    }
+    .btn-complete {
+      width: 100%; padding: 13px;
+      border: none; border-radius: var(--radius);
+      font-size: 15px; font-weight: 700;
+      cursor: pointer;
+      background: var(--primary); color: white;
+      transition: background 0.2s;
+    }
+    .btn-complete.done {
+      background: var(--success-light); color: var(--success);
+    }
+    /* Space for bottom bar */
+    #screen-question .tab-pane { padding-bottom: 80px; }
+
+    /* ── Expressions Screen ── */
+    .expr-list { padding: 8px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .expr-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      padding: 14px 16px;
+    }
+    .expr-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .expr-meaning { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 6px; }
+    .expr-desc { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 6px; }
+    .expr-example {
+      font-size: 13px; font-style: italic; color: var(--muted);
+      background: var(--surface2); border-radius: var(--radius-sm);
+      padding: 8px 10px; margin-bottom: 6px;
+    }
+    .expr-nuance {
+      font-size: 12px; color: #92400E; background: var(--warning-bg);
+      border: 1px solid var(--warning-border); border-radius: var(--radius-sm);
+      padding: 6px 10px;
+    }
+    .expr-card > *:last-child { margin-bottom: 0; }
+
+    /* ── Patterns Screen ── */
+    .pattern-items { padding: 4px 0; }
+    .pattern-card {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pattern-card:last-child { border-bottom: none; }
+    .pattern-row1 { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .pattern-idx {
+      flex: 0 0 auto;
+      width: 20px; height: 20px; border-radius: 6px;
+      background: var(--primary); color: white;
+      font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pattern-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--primary); background: var(--primary-light);
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .pattern-kr { font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 3px; }
+    .pattern-en { font-size: 12.5px; color: var(--muted); font-style: italic; margin-bottom: 8px; }
+    .pattern-example {
+      background: var(--surface2); border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
+    .pattern-example-en { font-size: 12.5px; color: var(--text); margin-bottom: 2px; }
+    .pattern-example-ko { font-size: 12px; color: var(--muted); }
+
+    /* ── Combo Templates Screen ── */
+    .combo-skeleton-body { padding: 4px 16px 12px; }
+    .combo-skeleton-row {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 6px 0; border-top: 1px dashed var(--border);
+    }
+    .combo-skeleton-row:first-of-type { border-top: none; }
+    .combo-skeleton-label {
+      flex: 0 0 auto;
+      font-size: 10.5px; font-weight: 700;
+      color: var(--primary); background: var(--primary-light);
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .combo-skeleton-en { font-size: 12.5px; color: var(--text); line-height: 1.5; }
+
+    /* ── Phrases Screen ── */
+    .phrases-intro {
+      margin: 8px 16px 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    .phrase-section {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 0 16px 10px;
+      overflow: hidden;
+      background: white;
+    }
+    .phrase-section summary {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      background: var(--surface);
+      user-select: none;
+    }
+    .phrase-section summary::-webkit-details-marker { display: none; }
+    .phrase-section summary::after {
+      content: '›';
+      margin-left: auto;
+      font-size: 20px;
+      color: var(--muted);
+      transition: transform 0.2s;
+      font-weight: 400;
+    }
+    .phrase-section[open] summary::after { transform: rotate(90deg); }
+    .phrase-section-desc {
+      font-size: 11px; font-weight: 400; color: var(--muted);
+      display: block; margin-top: 2px;
+    }
+    .phrase-items { padding: 4px 0; }
+    .phrase-item {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .phrase-item:last-child { border-bottom: none; }
+    .phrase-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      background: #EEF2FF; color: #4F46E5;
+      padding: 1px 6px; border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .phrase-en { font-size: 14px; font-weight: 500; color: #1e293b; margin-bottom: 3px; }
+    .phrase-ko { font-size: 12px; color: var(--muted); }
+
+    /* ── Mock Test Screen ── */
+    .mocktest-box {
+      margin: 0 16px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11.5px; line-height: 1.6; color: var(--text);
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .mocktest-copy-btn {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 4px 16px 16px;
+      padding: 11px;
+      background: var(--primary); color: white;
+      border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ── Corrections Screen ── */
+    .correction-add-form {
+      display: flex; flex-direction: column; gap: 8px;
+      margin: 0 16px 16px;
+      padding: 14px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    }
+    .correction-add-form input {
+      padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 14px; color: var(--text);
+      background: white;
+    }
+    .correction-add-form input:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+    .btn-add-correction {
+      padding: 10px;
+      background: var(--primary); color: white;
+      border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+    }
+    .correction-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin: 0 16px 10px;
+      padding: 12px 14px;
+      background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    }
+    .correction-text { flex: 1; min-width: 0; }
+    .correction-wrong { font-size: 13px; color: #dc2626; text-decoration: line-through; margin-bottom: 4px; word-break: break-word; }
+    .correction-correct { font-size: 14px; font-weight: 600; color: #16a34a; word-break: break-word; }
+    .btn-delete-correction {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      background: var(--surface2); color: var(--muted);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sel-popup" id="sel-popup">
+    <button id="sel-popup-highlight" type="button">🖍 형광펜</button>
+    <div class="sel-popup-divider"></div>
+    <button id="sel-popup-copy" type="button">📋 복사</button>
+  </div>
+
+  <!-- ── HOME ── -->
+  <div id="screen-home" class="screen active">
+    <div class="header">
+      <h1>OPIc 학습</h1>
+    </div>
+    <div class="progress-card">
+      <div class="progress-row">
+        <span>선택주제 진행률</span>
+        <strong id="total-count-text">0 / 0 완료</strong>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="total-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="tabs category-tabs">
+      <button class="tab-btn active" data-cat="선택주제" onclick="switchHomeCategory('선택주제')">선택주제</button>
+      <button class="tab-btn" data-cat="돌발주제" onclick="switchHomeCategory('돌발주제')">돌발주제</button>
+      <button class="tab-btn" data-cat="롤플레이" onclick="switchHomeCategory('롤플레이')">롤플레이</button>
+      <button class="tab-btn" data-cat="2Combo" onclick="switchHomeCategory('2Combo')">2Combo</button>
+      <button class="tab-btn" data-cat="만능답변" onclick="switchHomeCategory('만능답변')">만능답변</button>
+    </div>
+    <div id="combo-templates-box"></div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <!-- ── TOPIC ── -->
+  <div id="screen-topic" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2 id="topic-title-text"></h2>
+    </div>
+    <div class="progress-card">
+      <div class="progress-row">
+        <span>이 주제 진행률</span>
+        <strong id="topic-count-text">0 / 0 완료</strong>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="topic-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="q-list" id="q-list"></div>
+  </div>
+
+  <!-- ── QUESTION ── -->
+  <div id="screen-question" class="screen">
+    <div class="q-detail-header">
+      <div class="q-detail-top">
+        <button class="btn-back" onclick="goBack()">←</button>
+        <span class="q-detail-type" id="q-detail-type"></span>
+        <span class="q-detail-num" id="q-detail-num"></span>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('problem')">문제</button>
+        <button class="tab-btn" onclick="switchTab('script')">스크립트</button>
+        <button class="tab-btn" onclick="switchTab('pronunciation')">발음</button>
+      </div>
+    </div>
+
+    <div id="tab-problem" class="tab-pane active"></div>
+    <div id="tab-script" class="tab-pane"></div>
+    <div id="tab-pronunciation" class="tab-pane"></div>
+
+    <div class="bottom-bar">
+      <button class="btn-complete" id="btn-complete" onclick="toggleComplete()">완료 체크</button>
+    </div>
+  </div>
+
+  <!-- ── PHRASES ── -->
+  <div id="screen-phrases" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>📌 공통 구문</h2>
+    </div>
+    <p class="phrases-intro">어느 주제에서나 쓸 수 있는 범용 표현이에요. 뼈대 구문을 외워두면 어떤 질문이 나와도 자연스럽게 답할 수 있어요.</p>
+    <div id="phrases-list"></div>
+    <div style="height:24px;"></div>
+  </div>
+
+  <!-- ── SURVIVAL PHRASES ── -->
+  <div id="screen-survival" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>🆘 위기 대응 표현</h2>
+    </div>
+    <p class="phrases-intro">말문이 막히거나 당황스러운 문제가 나왔을 때 쓰는 표현이에요. 시간을 벌거나, 자연스럽게 다른 답으로 돌리거나, 다음 문제로 넘어갈 때 활용하세요.</p>
+    <div id="survival-list"></div>
+    <div style="height:24px;"></div>
+  </div>
+
+  <!-- ── EXPRESSIONS ── -->
+  <div id="screen-expressions" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>💡 표현 노트</h2>
+    </div>
+    <p class="phrases-intro">스크립트를 공부하다 발견한 뉘앙스 있는 구문들이에요. 뜻뿐 아니라 언제, 왜 쓰는지까지 함께 익혀두세요.</p>
+    <div class="expr-list" id="expr-list"></div>
+    <div style="height:24px;"></div>
+  </div>
+
+  <!-- ── PATTERNS ── -->
+  <div id="screen-patterns" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>🧩 만능 패턴 72문장</h2>
+    </div>
+    <p class="phrases-intro">빈칸(뭐뭐 / ...)에 내 이야기를 채워 넣는 답변 틀이에요. 패턴을 외우고, 예제처럼 소재만 바꿔서 연습해 보세요.</p>
+    <div id="patterns-list"></div>
+    <div style="height:24px;"></div>
+  </div>
+
+  <!-- ── CORRECTIONS (교정 노트) ── -->
+  <div id="screen-corrections" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>🩹 교정 노트</h2>
+    </div>
+    <p class="phrases-intro">말하다가 틀렸거나 어색했던 표현을 직접 적어두고 관리하세요. 이 기기에만 저장돼요.</p>
+    <div class="correction-add-form">
+      <input type="text" id="corr-wrong-input" placeholder="틀린 표현" onkeydown="if(event.key==='Enter')document.getElementById('corr-correct-input').focus()" />
+      <input type="text" id="corr-correct-input" placeholder="맞는 표현" onkeydown="if(event.key==='Enter')addCorrection()" />
+      <button class="btn-add-correction" onclick="addCorrection()">+ 추가</button>
+    </div>
+    <div id="corrections-list"></div>
+    <div style="height:24px;"></div>
+  </div>
+
+  <!-- ── MOCK TEST (에바 프롬프트) ── -->
+  <div id="screen-mocktest" class="screen">
+    <div class="header">
+      <button class="btn-back" onclick="goBack()">←</button>
+      <h2>🎤 에바 모의고사</h2>
+    </div>
+    <p class="phrases-intro">아래 프롬프트를 복사해서 ChatGPT나 Claude 앱의 새 대화에 붙여넣으면, "에바"가 실제 오픽처럼 질문하고 마지막에 채점까지 해줘요. (이 앱 자체에서 실행되는 기능이 아니라, 다른 AI 챗봇 앱에서 쓰는 프롬프트예요.)</p>
+    <button class="mocktest-copy-btn" id="mocktest-copy-btn" onclick="copyMockTestPrompt()">📋 프롬프트 복사하기</button>
+    <div class="mocktest-box" id="mocktest-prompt"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    let currentTopicId = null;
+    let currentQuestionId = null;
+    let progress = {};
+    let highlights = {};
+    let ttsPlaying = false;
+    let activeSentenceBtn = null;
+    let ttsRate = 0.85;
+    let ttsRepeat = 1;
+    const TTS_RATE_OPTIONS = [0.4, 0.5, 0.6, 0.75, 0.85, 1, 1.25];
+    const TTS_REPEAT_OPTIONS = [1, 2, 3, 5];
+    function loadTtsSettings() {
+      try {
+        const s = JSON.parse(localStorage.getItem('opic-tts-settings') || '{}');
+        if (TTS_RATE_OPTIONS.includes(s.rate)) ttsRate = s.rate;
+        if (TTS_REPEAT_OPTIONS.includes(s.repeat)) ttsRepeat = s.repeat;
+      } catch {}
+    }
+    function saveTtsSettings() {
+      try { localStorage.setItem('opic-tts-settings', JSON.stringify({ rate: ttsRate, repeat: ttsRepeat })); } catch {}
+    }
+    function setTtsRate(v) { ttsRate = parseFloat(v); saveTtsSettings(); }
+    function setTtsRepeat(v) { ttsRepeat = parseInt(v, 10); saveTtsSettings(); }
+    function ttsRateOptionsHtml() {
+      return TTS_RATE_OPTIONS.map(r =>
+        `<option value="${r}" ${r === ttsRate ? 'selected' : ''}>${r}x${r === 0.85 ? ' (기본)' : ''}</option>`
+      ).join('');
+    }
+    function ttsRepeatOptionsHtml() {
+      return TTS_REPEAT_OPTIONS.map(r =>
+        `<option value="${r}" ${r === ttsRepeat ? 'selected' : ''}>${r}회${r === 1 ? ' (기본)' : ''}</option>`
+      ).join('');
+    }
+    let screenStack = [];
+    let currentCategory = '선택주제';
+
+    // ── Storage ──
+    function isPlainObject(v) {
+      return typeof v === 'object' && v !== null && !Array.isArray(v);
+    }
+    function loadProgress() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('opic-progress') || '{}');
+        progress = isPlainObject(parsed) ? parsed : {};
+      } catch { progress = {}; }
+    }
+    function saveProgress() {
+      try { localStorage.setItem('opic-progress', JSON.stringify(progress)); } catch {}
+    }
+    function loadHighlights() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem('opic-highlights') || '{}');
+        highlights = isPlainObject(parsed) ? parsed : {};
+      } catch { highlights = {}; }
+    }
+    function saveHighlights() {
+      try { localStorage.setItem('opic-highlights', JSON.stringify(highlights)); } catch {}
+    }
+    let corrections = [];
+    const DEFAULT_CORRECTIONS = [
+      { wrong: "I got spending time there", correct: "I get to spend time there / I spend time there" },
+      { wrong: "It means means to run me", correct: "It means a lot to me" },
+      { wrong: "climb or dodge stairs", correct: "climb all the stairs" },
+      { wrong: "touch the dishes", correct: "wash the dishes" },
+      { wrong: "she always peer tired", correct: "she always seems tired" },
+      { wrong: "I think I of my wife I'm happy to them", correct: "I think of my wife, so I'm happy to do them" },
+      { wrong: "the disease was degested", correct: "the dish was disgusting" },
+      { wrong: "this all pointing holiday", correct: "it turned into a memorable holiday" }
+    ];
+    function loadCorrections() {
+      try {
+        if (localStorage.getItem('opic-corrections') === null) {
+          corrections = DEFAULT_CORRECTIONS.slice();
+          saveCorrections();
+          return;
+        }
+        const parsed = JSON.parse(localStorage.getItem('opic-corrections') || '[]');
+        corrections = Array.isArray(parsed) ? parsed : [];
+      } catch { corrections = []; }
+    }
+    function saveCorrections() {
+      try { localStorage.setItem('opic-corrections', JSON.stringify(corrections)); } catch {}
+    }
+
+    // ── Navigation ──
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + id).classList.add('active');
+      window.scrollTo(0, 0);
+      if (ttsPlaying || activeSentenceBtn) {
+        ttsCancel();
+        ttsPlaying = false;
+        document.body.classList.remove('tts-playing');
+        resetSentenceBtn();
+      }
+      hideSelectionPopup();
+    }
+
+    function goBack() {
+      const prev = screenStack.pop();
+      if (prev === 'home') {
+        renderHome();
+        showScreen('home');
+      } else if (prev === 'topic') {
+        renderTopic(currentTopicId);
+        showScreen('topic');
+      }
+    }
+
+    function goTopic(topicId) {
+      currentTopicId = topicId;
+      screenStack.push('home');
+      renderTopic(topicId);
+      showScreen('topic');
+    }
+
+    function goQuestion(questionId) {
+      currentQuestionId = questionId;
+      screenStack.push('topic');
+      renderQuestion(questionId);
+      showScreen('question');
+      switchTab('problem');
+    }
+
+    // ── Render Home ──
+    function switchHomeCategory(cat) {
+      currentCategory = cat;
+      renderHome();
+    }
+    function topicCardHtml(t) {
+      const d = t.questions.filter(q => progress[String(q.id)]).length;
+      const tot = t.questions.length;
+      const pct = tot > 0 ? (d / tot) * 100 : 0;
+      return `
+        <div class="topic-card" onclick="goTopic(${t.id})">
+          <span class="topic-emoji">${t.emoji}</span>
+          <div class="topic-name">${t.nameKo}</div>
+          <div class="topic-count">${d}/${tot} 완료</div>
+          <div class="topic-bar">
+            <div class="topic-bar-fill" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+    }
+    function comboTemplatesHtml() {
+      return `
+        <p class="phrases-intro" style="margin:12px 16px;">14-15번은 주제를 예측하기 어려우니, 아래 뼈대 문형을 외워두고 소재만 바꿔 끼우세요. 아래 토픽 카드를 열면 뼈대를 실제로 채운 원고를 볼 수 있어요.</p>
+        ${COMBO_TEMPLATES.map((t, ti) => `
+          <details class="phrase-section combo-template-card" ${ti === 0 ? 'open' : ''}>
+            <summary>
+              <span>${t.emoji}</span>
+              <span>${t.title}<span class="phrase-section-desc">${t.desc}</span></span>
+            </summary>
+            <div class="combo-skeleton-body">
+              ${t.skeleton.map(s => `
+                <div class="combo-skeleton-row">
+                  <span class="combo-skeleton-label">${s.label}</span>
+                  <span class="combo-skeleton-en">${s.en}</span>
+                </div>`).join('')}
+            </div>
+          </details>`).join('')}`;
+    }
+    function emptyCategoryHtml(label) {
+      return `
+        <div class="no-content" style="grid-column:1/-1;">
+          <div class="no-content-icon">🚧</div>
+          ${label} 콘텐츠는 아직 준비 중이에요.
+        </div>`;
+    }
+    function renderHome() {
+      // 진행률 카드는 핵심 학습 대상인 선택주제만 집계한다.
+      // 돌발주제/2Combo/롤플레이는 보충 자료라 이 숫자에서 제외 (각 토픽 타일 자체의 진행률은 그대로 표시됨).
+      const coreTopics = TOPICS.filter(t => t.category === '선택주제');
+      const total = coreTopics.reduce((a, t) => a + t.questions.length, 0);
+      const done = coreTopics.reduce((a, t) => a + t.questions.filter(q => progress[String(q.id)]).length, 0);
+      document.getElementById('total-count-text').textContent = `${done} / ${total} 완료`;
+      document.getElementById('total-progress-fill').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
+
+      document.querySelectorAll('.category-tabs .tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.cat === currentCategory);
+      });
+
+      const comboBox = document.getElementById('combo-templates-box');
+      comboBox.innerHTML = currentCategory === '2Combo' ? comboTemplatesHtml() : '';
+
+      const grid = document.getElementById('topic-grid');
+      if (currentCategory === '선택주제' || currentCategory === '돌발주제' || currentCategory === '롤플레이' || currentCategory === '2Combo') {
+        const list = TOPICS.filter(t => t.category === currentCategory);
+        grid.innerHTML = list.length ? list.map(topicCardHtml).join('') : emptyCategoryHtml(currentCategory);
+      } else if (currentCategory === '만능답변') {
+        grid.innerHTML = `
+          <div class="topic-card" onclick="goPhrases()">
+            <span class="topic-emoji">📌</span>
+            <div class="topic-name">공통 구문</div>
+            <div class="topic-count">8개 카테고리</div>
+          </div>
+          <div class="topic-card" onclick="goPatterns()">
+            <span class="topic-emoji">🧩</span>
+            <div class="topic-name">만능 패턴</div>
+            <div class="topic-count">72문장</div>
+          </div>
+          <div class="topic-card" onclick="goExpressions()">
+            <span class="topic-emoji">💡</span>
+            <div class="topic-name">표현 노트</div>
+            <div class="topic-count">뉘앙스 표현</div>
+          </div>
+          <div class="topic-card" onclick="goSurvival()">
+            <span class="topic-emoji">🆘</span>
+            <div class="topic-name">위기 대응 표현</div>
+            <div class="topic-count">4개 상황별 대처법</div>
+          </div>
+          <div class="topic-card" onclick="goCorrections()">
+            <span class="topic-emoji">🩹</span>
+            <div class="topic-name">교정 노트</div>
+            <div class="topic-count">${corrections.length}개 항목</div>
+          </div>
+          <div class="topic-card" onclick="goMockTest()">
+            <span class="topic-emoji">🎤</span>
+            <div class="topic-name">에바 모의고사</div>
+            <div class="topic-count">프롬프트 복사(임시)</div>
+          </div>`;
+      }
+    }
+
+    // ── Render Topic ──
+    function renderTopic(topicId) {
+      const topic = TOPICS.find(t => t.id === topicId);
+      document.getElementById('topic-title-text').textContent = `${topic.emoji} ${topic.nameKo}`;
+
+      const done = topic.questions.filter(q => progress[String(q.id)]).length;
+      const total = topic.questions.length;
+      document.getElementById('topic-count-text').textContent = `${done} / ${total} 완료`;
+      document.getElementById('topic-progress-fill').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
+
+      document.getElementById('q-list').innerHTML = topic.questions.map(q => {
+        const isDone = !!progress[String(q.id)];
+        const isRoleplay = q.type.includes('롤플레이');
+        return `
+          <div class="q-item ${isDone ? 'done' : ''}" onclick="goQuestion('${q.id}')">
+            <div class="q-check">${isDone ? '✓' : ''}</div>
+            <div class="q-body">
+              <span class="q-tag ${isRoleplay ? 'roleplay' : ''}">Q${q.id} · ${q.type}</span>
+              <div class="q-preview">${q.translation}</div>
+            </div>
+            <div class="q-arrow">›</div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Render Question ──
+    function renderQuestion(questionId) {
+      const topic = TOPICS.find(t => t.questions.some(q => String(q.id) === String(questionId)));
+      const q = topic.questions.find(q => String(q.id) === String(questionId));
+
+      document.getElementById('q-detail-type').textContent = `${topic.nameKo} · ${q.type}`;
+      document.getElementById('q-detail-num').textContent = `Q${q.id}`;
+
+      // 문제 탭
+      document.getElementById('tab-problem').innerHTML = `
+        <div class="q-translation-box">${q.translation}</div>
+        <div class="q-english-text">${q.question}</div>
+        ${q.structure ? `
+          <div class="structure-heading">한국어 뼈대</div>
+          <ul class="structure-list">
+            ${q.structure.map(s => `<li class="structure-item">${s}</li>`).join('')}
+          </ul>` : ''}`;
+
+      // 스크립트 탭
+      if (q.script) {
+        const fullText = q.script.map(s => s.en).join(' ');
+        document.getElementById('tab-script').innerHTML = `
+          <div class="tts-settings">
+            <label>속도
+              <select id="tts-rate-select" onchange="setTtsRate(this.value)">${ttsRateOptionsHtml()}</select>
+            </label>
+            <label>반복
+              <select id="tts-repeat-select" onchange="setTtsRepeat(this.value)">${ttsRepeatOptionsHtml()}</select>
+            </label>
+          </div>
+          <button class="tts-btn" id="tts-btn" onclick="toggleTTS('${q.id}')">
+            🔊 전체 듣기
+          </button>
+          ${q.script.map((s, i) => {
+            const hl = getHL(q.id, 'script', i);
+            return `
+            <div class="sentence-card ${hl.flagged ? 'flagged' : ''}">
+              <div class="sentence-top">
+                <div class="sentence-en hl-target" data-q="${q.id}" data-tab="script" data-idx="${i}">${renderMarked(s.en, hl.ranges)}</div>
+                <div class="sentence-actions">
+                  <button class="flag-btn ${hl.flagged ? 'flagged' : ''}" onclick="toggleFlag(this,'${q.id}','script',${i})" title="이 문장 체크">🖍</button>
+                  ${hl.ranges.length ? `<button class="clear-hl-btn" onclick="clearHL(this,'${q.id}','script',${i})" title="형광펜 지우기">🧹</button>` : ''}
+                  <button class="sentence-tts-btn" onclick="toggleSentenceTTS(this,'${q.id}','script',${i})" title="이 문장 듣기">🔊</button>
+                </div>
+              </div>
+              <div class="sentence-ko" id="ko-${q.id}-${i}">${s.ko}</div>
+              <button class="btn-show-ko" onclick="toggleKo('${q.id}', ${i})">한국어 보기 ▾</button>
+            </div>`;
+          }).join('')}`;
+        window._ttsText = fullText;
+      } else {
+        document.getElementById('tab-script').innerHTML = `
+          <div class="no-content">
+            <div class="no-content-icon">📝</div>
+            스크립트가 아직 준비 중이에요.
+          </div>`;
+        window._ttsText = null;
+      }
+
+      // 발음 탭
+      if (q.pronunciation) {
+        document.getElementById('tab-pronunciation').innerHTML = `
+          ${q.pronunciation.map((p, i) => {
+            const hlPron = getHL(q.id, 'pron', i);
+            const hlEn = getHL(q.id, 'pron-en', i);
+            const hlKo = getHL(q.id, 'pron-ko', i);
+            return `
+            <div class="pron-card ${hlPron.flagged ? 'flagged' : ''}">
+              <div class="pron-top">
+                <div class="pron-en hl-target" data-q="${q.id}" data-tab="pron-en" data-idx="${i}">${renderMarked(p.en, hlEn.ranges)}</div>
+                <div class="sentence-actions">
+                  <button class="flag-btn ${hlPron.flagged ? 'flagged' : ''}" onclick="toggleFlag(this,'${q.id}','pron',${i})" title="이 문장 체크">🖍</button>
+                  ${hlEn.ranges.length ? `<button class="clear-hl-btn" onclick="clearHL(this,'${q.id}','pron-en',${i})" title="형광펜 지우기">🧹</button>` : ''}
+                  <button class="sentence-tts-btn" onclick="toggleSentenceTTS(this,'${q.id}','pron-en',${i})" title="이 문장 듣기">🔊</button>
+                </div>
+              </div>
+              <div class="pron-top">
+                <div class="pron-ko hl-target" data-q="${q.id}" data-tab="pron-ko" data-idx="${i}">${renderMarked(p.ko, hlKo.ranges)}</div>
+                ${hlKo.ranges.length ? `<button class="clear-hl-btn" onclick="clearHL(this,'${q.id}','pron-ko',${i})" title="형광펜 지우기">🧹</button>` : ''}
+              </div>
+            </div>`;
+          }).join('')}
+          ${q.warnings ? `
+            <div class="warnings-box">
+              <div class="warnings-title">⚠ 발음 주의 단어</div>
+              ${q.warnings.map(w => `
+                <div class="warning-row">
+                  <span class="warning-word">${w.word}</span>
+                  <span class="warning-guide">→ ${w.guide}</span>
+                </div>`).join('')}
+            </div>` : ''}`;
+      } else {
+        document.getElementById('tab-pronunciation').innerHTML = `
+          <div class="no-content">
+            <div class="no-content-icon">🔊</div>
+            발음 가이드가 아직 준비 중이에요.
+          </div>`;
+      }
+
+      updateCompleteBtn(questionId);
+    }
+
+    // ── Tabs ──
+    function switchTab(name) {
+      const tabMap = { problem: 0, script: 1, pronunciation: 2 };
+      document.querySelectorAll('#screen-question .tabs .tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === tabMap[name]);
+      });
+      document.querySelectorAll('#screen-question .tab-pane').forEach((pane, i) => {
+        pane.classList.toggle('active', i === tabMap[name]);
+      });
+    }
+
+    // ── Korean Toggle ──
+    function toggleKo(qId, i) {
+      const el = document.getElementById(`ko-${qId}-${i}`);
+      const btn = el.nextElementSibling;
+      el.classList.toggle('visible');
+      btn.textContent = el.classList.contains('visible') ? '한국어 숨기기 ▴' : '한국어 보기 ▾';
+    }
+
+    // ── 형광펜 하이라이트 ──
+    function getHL(qId, tab, idx) {
+      const q = highlights[qId] || (highlights[qId] = {});
+      const t = q[tab] || (q[tab] = {});
+      return t[idx] || (t[idx] = { flagged: false, ranges: [] });
+    }
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function renderMarked(text, ranges) {
+      if (!ranges || !ranges.length) return escapeHtml(text);
+      const sorted = [...ranges].sort((a, b) => a[0] - b[0]);
+      let html = '', pos = 0;
+      sorted.forEach(([start, end]) => {
+        if (start < pos) start = pos;
+        if (start >= end) return;
+        html += escapeHtml(text.slice(pos, start));
+        html += `<mark class="hl">${escapeHtml(text.slice(start, end))}</mark>`;
+        pos = end;
+      });
+      html += escapeHtml(text.slice(pos));
+      return html;
+    }
+    function getSourceText(qId, tab, idx) {
+      const topic = TOPICS.find(t => t.questions.some(q => String(q.id) === String(qId)));
+      const q = topic.questions.find(q => String(q.id) === String(qId));
+      if (tab === 'script') return q.script[idx].en;
+      if (tab === 'pron-en') return q.pronunciation[idx].en;
+      if (tab === 'pron-ko') return q.pronunciation[idx].ko;
+      return '';
+    }
+    function rerenderHLTarget(qId, tab, idx) {
+      const el = document.querySelector(`.hl-target[data-q="${qId}"][data-tab="${tab}"][data-idx="${idx}"]`);
+      if (!el) return;
+      const text = getSourceText(qId, tab, idx);
+      const hl = getHL(qId, tab, idx);
+      el.innerHTML = renderMarked(text, hl.ranges);
+    }
+    function clearHL(btn, qId, tab, idx) {
+      const hl = getHL(qId, tab, idx);
+      hl.ranges = [];
+      saveHighlights();
+      rerenderHLTarget(qId, tab, idx);
+      btn.remove();
+    }
+    function ensureClearBtn(qId, tab, idx) {
+      const el = document.querySelector(`.hl-target[data-q="${qId}"][data-tab="${tab}"][data-idx="${idx}"]`);
+      if (!el) return;
+      const row = el.parentElement;
+      // script/pron-en 줄은 🖍🧹🔊가 .sentence-actions 안에 세로로 쌓여 있고,
+      // pron-ko 줄은 그 래퍼 없이 지우개 버튼만 행에 바로 붙는다.
+      const actions = row.querySelector('.sentence-actions') || row;
+      const hl = getHL(qId, tab, idx);
+      let btn = actions.querySelector('.clear-hl-btn');
+      if (hl.ranges.length > 0) {
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.className = 'clear-hl-btn';
+          btn.title = '형광펜 지우기';
+          btn.textContent = '🧹';
+          btn.onclick = () => clearHL(btn, qId, tab, idx);
+          const flagBtn = actions.querySelector('.flag-btn');
+          if (flagBtn) flagBtn.insertAdjacentElement('afterend', btn);
+          else actions.insertAdjacentElement('afterbegin', btn);
+        }
+      } else if (btn) {
+        btn.remove();
+      }
+    }
+    function getOffsetWithin(root, node, offset) {
+      let total = 0;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let n;
+      while ((n = walker.nextNode())) {
+        if (n === node) return total + offset;
+        total += n.textContent.length;
+      }
+      return total;
+    }
+    // ── 선택 팝업 (형광펜 / 복사) ──
+    // 텍스트를 선택해도 곧바로 형광펜이 적용되진 않는다 — 선택을 유지한 채
+    // 작은 팝업으로 "형광펜"이냐 "복사"냐를 직접 고르게 해서, 복사하려고 선택한
+    // 텍스트가 의도치 않게 형광펜으로 바뀌어버리는 걸 막는다.
+    let pendingSelection = null;
+    const selPopup = document.getElementById('sel-popup');
+
+    function hideSelectionPopup() {
+      selPopup.classList.remove('visible');
+      pendingSelection = null;
+    }
+    function showSelectionPopup(rect) {
+      selPopup.classList.add('visible');
+      const popupWidth = selPopup.offsetWidth || 160;
+      let left = rect.left + rect.width / 2 - popupWidth / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - popupWidth - 8));
+      // 모바일 브라우저의 기본 선택 툴바(복사 등)가 선택 영역 위쪽에 뜨는 경우가
+      // 많아서, 우리 팝업은 아래쪽을 우선하고 공간이 없을 때만 위로 올린다.
+      let top = rect.bottom + 8;
+      if (top + selPopup.offsetHeight > window.innerHeight - 8) top = rect.top - selPopup.offsetHeight - 8;
+      selPopup.style.left = `${left}px`;
+      selPopup.style.top = `${top}px`;
+    }
+    function computePendingSelection() {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) { hideSelectionPopup(); return; }
+      const range = sel.getRangeAt(0);
+      const startNode = range.startContainer.nodeType === 1 ? range.startContainer : range.startContainer.parentElement;
+      const el = startNode && startNode.closest('.hl-target');
+      if (!el || !el.contains(range.startContainer) || !el.contains(range.endContainer)) { hideSelectionPopup(); return; }
+
+      const start = getOffsetWithin(el, range.startContainer, range.startOffset);
+      const end = getOffsetWithin(el, range.endContainer, range.endOffset);
+      if (end <= start) { hideSelectionPopup(); return; }
+
+      pendingSelection = { el, start, end };
+      showSelectionPopup(range.getBoundingClientRect());
+    }
+    let hlSelectionTimer = null;
+    document.addEventListener('selectionchange', () => {
+      clearTimeout(hlSelectionTimer);
+      hlSelectionTimer = setTimeout(computePendingSelection, 150);
+    });
+    // mousedown(=touchstart 포함)에서 기본 동작을 막아, 팝업 버튼을 누를 때
+    // 브라우저가 먼저 선택을 해제해버리는 걸 방지한다 (선택이 살아있어야
+    // execCommand('copy')와 형광펜 적용 둘 다 동작함).
+    selPopup.addEventListener('mousedown', (e) => e.preventDefault());
+    document.getElementById('sel-popup-highlight').addEventListener('click', () => {
+      if (!pendingSelection) return;
+      const { el, start, end } = pendingSelection;
+      const qId = el.dataset.q, tab = el.dataset.tab, idx = +el.dataset.idx;
+      const hl = getHL(qId, tab, idx);
+      hl.ranges.push([start, end]);
+      saveHighlights();
+      window.getSelection().removeAllRanges();
+      rerenderHLTarget(qId, tab, idx);
+      ensureClearBtn(qId, tab, idx);
+      hideSelectionPopup();
+    });
+    document.getElementById('sel-popup-copy').addEventListener('click', () => {
+      try { document.execCommand('copy'); } catch {}
+      const btn = document.getElementById('sel-popup-copy');
+      const original = btn.textContent;
+      btn.textContent = '✅ 복사됨';
+      setTimeout(() => { btn.textContent = original; }, 900);
+      window.getSelection().removeAllRanges();
+      hideSelectionPopup();
+    });
+    document.addEventListener('click', (e) => {
+      if (window.getSelection().toString().length > 0) return;
+      const mark = e.target.closest('mark.hl');
+      if (!mark) return;
+      const el = mark.closest('.hl-target');
+      if (!el) return;
+      const qId = el.dataset.q, tab = el.dataset.tab, idx = +el.dataset.idx;
+      const hl = getHL(qId, tab, idx);
+      const marks = Array.from(el.querySelectorAll('mark.hl'));
+      const markIdx = marks.indexOf(mark);
+      const sorted = [...hl.ranges].sort((a, b) => a[0] - b[0]);
+      sorted.splice(markIdx, 1);
+      hl.ranges = sorted;
+      saveHighlights();
+      rerenderHLTarget(qId, tab, idx);
+      ensureClearBtn(qId, tab, idx);
+      e.stopPropagation();
+    });
+    function toggleFlag(btn, qId, tab, idx) {
+      const hl = getHL(qId, tab, idx);
+      hl.flagged = !hl.flagged;
+      saveHighlights();
+      btn.classList.toggle('flagged', hl.flagged);
+      const card = btn.closest('.sentence-card, .pron-card');
+      if (card) card.classList.toggle('flagged', hl.flagged);
+    }
+
+    // ── TTS ──
+    // Android WebView doesn't implement window.speechSynthesis, so the wrapper app
+    // injects a native bridge (window.AndroidTTS) — use it when present, otherwise
+    // fall back to the browser's built-in speechSynthesis.
+    function ttsSpeak(text, onStart, onEnd) {
+      if (window.AndroidTTS) {
+        window._ttsOnEnd = onEnd;
+        window.AndroidTTS.speak(text);
+        onStart();
+      } else {
+        const utt = new SpeechSynthesisUtterance(text);
+        utt.lang = 'en-US';
+        utt.rate = ttsRate;
+        utt.onstart = onStart;
+        utt.onend = utt.onerror = onEnd;
+        speechSynthesis.speak(utt);
+      }
+    }
+    function ttsCancel() {
+      if (window.AndroidTTS) window.AndroidTTS.stop();
+      else speechSynthesis.cancel();
+    }
+    window.onAndroidTTSEnd = function () {
+      if (window._ttsOnEnd) window._ttsOnEnd();
+    };
+
+    function toggleTTS(qId) {
+      const btn = document.getElementById('tts-btn');
+      if (ttsPlaying) {
+        ttsCancel();
+        ttsPlaying = false;
+        btn.textContent = '🔊 전체 듣기';
+        btn.classList.remove('playing');
+        document.body.classList.remove('tts-playing');
+        return;
+      }
+      if (!window._ttsText) return;
+
+      ttsCancel();
+      resetSentenceBtn();
+
+      // Set state synchronously (not inside onStart) so a screen change or a
+      // second click during the async gap before playback actually starts
+      // still sees ttsPlaying=true instead of racing past it.
+      ttsPlaying = true;
+      btn.textContent = '⏹ 중지';
+      btn.classList.add('playing');
+      document.body.classList.add('tts-playing');
+
+      let remaining = ttsRepeat;
+      const playOnce = () => {
+        ttsSpeak(
+          window._ttsText,
+          () => {},
+          () => {
+            remaining--;
+            if (remaining > 0 && ttsPlaying) {
+              playOnce();
+            } else {
+              ttsPlaying = false;
+              btn.textContent = '🔊 전체 듣기';
+              btn.classList.remove('playing');
+              document.body.classList.remove('tts-playing');
+            }
+          }
+        );
+      };
+      playOnce();
+    }
+
+    function resetSentenceBtn() {
+      if (!activeSentenceBtn) return;
+      activeSentenceBtn.textContent = '🔊';
+      activeSentenceBtn.classList.remove('playing');
+      activeSentenceBtn = null;
+    }
+    function toggleSentenceTTS(btn, qId, tab, idx) {
+      if (activeSentenceBtn === btn) {
+        ttsCancel();
+        resetSentenceBtn();
+        return;
+      }
+      ttsCancel();
+      resetSentenceBtn();
+      const text = getSourceText(qId, tab, idx);
+      if (!text) return;
+      activeSentenceBtn = btn;
+      btn.textContent = '⏹';
+      btn.classList.add('playing');
+      let remaining = ttsRepeat;
+      const playOnce = () => {
+        ttsSpeak(text, () => {}, () => {
+          remaining--;
+          if (remaining > 0 && activeSentenceBtn === btn) {
+            playOnce();
+          } else if (activeSentenceBtn === btn) {
+            resetSentenceBtn();
+          }
+        });
+      };
+      playOnce();
+    }
+
+    // ── Complete ──
+    function toggleComplete() {
+      const key = String(currentQuestionId);
+      if (progress[key]) {
+        delete progress[key];
+      } else {
+        progress[key] = true;
+      }
+      saveProgress();
+      updateCompleteBtn(currentQuestionId);
+    }
+
+    function updateCompleteBtn(qId) {
+      const btn = document.getElementById('btn-complete');
+      if (progress[String(qId)]) {
+        btn.textContent = '✓ 완료됨 (취소하기)';
+        btn.classList.add('done');
+      } else {
+        btn.textContent = '완료 체크하기';
+        btn.classList.remove('done');
+      }
+    }
+
+    // ── Common Phrases ──
+    const PHRASES = [
+      {
+        emoji: "🗣", title: "답변 시작", desc: "어떤 주제든 자연스럽게 시작하기",
+        phrases: [
+          { tag: "범용", en: "Well, I'd like to talk about...", ko: "음, ~에 대해 말씀드릴게요" },
+          { tag: "범용", en: "Let me tell you about...", ko: "~에 대해 말씀드릴게요" },
+          { tag: "범용", en: "To be honest, I'd say that...", ko: "솔직히 말하면, ~라고 할 수 있어요" },
+          { tag: "범용", en: "I'd say that...", ko: "~라고 할 수 있어요" },
+        ]
+      },
+      {
+        emoji: "🔗", title: "상황별 전환 부사", desc: "문장 맨 앞에 붙이면 자연스러운 전환어, 콤마 뒤에 본문 이어가기",
+        phrases: [
+          { tag: "순서/전개", en: "First of all, / To begin with,", ko: "우선" },
+          { tag: "순서/전개", en: "After that, / Then,", ko: "그다음에" },
+          { tag: "순서/전개", en: "Eventually,", ko: "결국에는" },
+          { tag: "순서/전개", en: "Finally, / Lastly,", ko: "마지막으로" },
+          { tag: "강조", en: "Definitely / Absolutely", ko: "확실히" },
+          { tag: "강조", en: "Honestly, / To be honest,", ko: "솔직히" },
+          { tag: "강조", en: "Actually,", ko: "사실은" },
+          { tag: "강조", en: "Really", ko: "정말로" },
+          { tag: "의견/태도", en: "Personally,", ko: "개인적으로" },
+          { tag: "의견/태도", en: "Basically,", ko: "기본적으로" },
+          { tag: "의견/태도", en: "Obviously,", ko: "당연히" },
+          { tag: "의견/태도", en: "Surprisingly,", ko: "놀랍게도" },
+          { tag: "빈도", en: "Usually / Normally", ko: "보통" },
+          { tag: "빈도", en: "Occasionally", ko: "가끔" },
+          { tag: "빈도", en: "Rarely", ko: "드물게" },
+          { tag: "빈도", en: "Constantly", ko: "끊임없이" },
+          { tag: "대조/전환", en: "However,", ko: "하지만" },
+          { tag: "대조/전환", en: "On the other hand,", ko: "반면에" },
+          { tag: "대조/전환", en: "Unfortunately,", ko: "아쉽게도" },
+          { tag: "대조/전환", en: "Fortunately,", ko: "다행히도" },
+          { tag: "결과/요약", en: "As a result,", ko: "그 결과" },
+          { tag: "결과/요약", en: "Overall,", ko: "전반적으로" },
+          { tag: "결과/요약", en: "In short,", ko: "요약하면" },
+          { tag: "결과/요약", en: "That's why", ko: "그래서" },
+        ]
+      },
+      {
+        emoji: "📖", title: "경험 이야기 뼈대", desc: "과거 경험 · 문제 해결 · 특별한 일",
+        phrases: [
+          { tag: "시작", en: "Let me tell you about my experience about [two years] ago.", ko: "[2년] 전의 경험을 말씀드릴게요" },
+          { tag: "배경", en: "At that time, [상황].", ko: "그 당시에, [상황]이었어요" },
+          { tag: "전개", en: "At first, everything seemed fine.", ko: "처음엔 모든 게 괜찮아 보였어요" },
+          { tag: "전환", en: "However, [문제].", ko: "그런데, [문제]가 생겼어요" },
+          { tag: "결과", en: "As a result, [결과].", ko: "결국, [결과]가 되었어요" },
+          { tag: "해결", en: "Luckily, [해결].", ko: "다행히도, [해결]되었어요" },
+          { tag: "마무리", en: "It was a [terrible / great / unforgettable] experience.", ko: "정말 [끔찍한 / 좋은 / 잊을 수 없는] 경험이었어요" },
+        ]
+      },
+      {
+        emoji: "🏠", title: "현재 묘사", desc: "장소 · 사물 · 습관 묘사할 때",
+        phrases: [
+          { tag: "이유", en: "There are some reasons why I like [주제].", ko: "[주제]를 좋아하는 이유가 몇 가지 있어요" },
+          { tag: "나열", en: "First... Also... Overall...", ko: "첫째로... 또한... 전반적으로..." },
+          { tag: "강조", en: "What I really love about it is...", ko: "제가 정말 좋아하는 점은..." },
+          { tag: "마무리", en: "Overall, [주제] is very important to me.", ko: "전반적으로, [주제]는 저에게 매우 중요해요" },
+        ]
+      },
+      {
+        emoji: "🔄", title: "과거 vs 현재 비교", desc: "변화 · 성장 · 달라진 점 말할 때",
+        phrases: [
+          { tag: "과거", en: "I used to [과거 습관], but now [현재].", ko: "예전엔 [~했는데], 지금은 [현재]예요" },
+          { tag: "과거", en: "At that time, [과거 상황].", ko: "그 당시에는, [과거 상황]이었어요" },
+          { tag: "현재", en: "Now, everything is different.", ko: "이제는 모든 게 달라요" },
+          { tag: "현재", en: "These days, I tend to [현재 습관].", ko: "요즘에는 주로 [~해요]" },
+        ]
+      },
+      {
+        emoji: "😊", title: "감정 · 반응", desc: "흥분 · 놀라움 · 감동 · 아쉬움 표현",
+        phrases: [
+          { tag: "긍정", en: "I was really excited / surprised / impressed.", ko: "정말 흥분되었어요 / 놀랐어요 / 감동받았어요" },
+          { tag: "강조", en: "I couldn't believe my own eyes.", ko: "제 눈을 믿을 수 없었어요" },
+          { tag: "강조", en: "It was an unforgettable experience.", ko: "잊을 수 없는 경험이었어요" },
+          { tag: "부정", en: "I felt really sorry / disappointed.", ko: "정말 미안했어요 / 실망스러웠어요" },
+          { tag: "부정", en: "I was so frustrated.", ko: "정말 답답했어요" },
+        ]
+      },
+      {
+        emoji: "🎭", title: "롤플레이 공통", desc: "질문 · 항의 · 사과 · 해결 요청",
+        phrases: [
+          { tag: "질문 시작", en: "Hello, I have a few questions about [주제].", ko: "안녕하세요, [주제]에 대해 몇 가지 질문이 있어요" },
+          { tag: "질문", en: "Could you tell me more about...?", ko: "~에 대해 좀 더 말씀해 주시겠어요?" },
+          { tag: "사과", en: "I'm sorry about this. / I apologize for the inconvenience.", ko: "이 점 죄송합니다 / 불편을 드려 죄송합니다" },
+          { tag: "책임", en: "I'll take full responsibility for this.", ko: "이 일에 대해 전적으로 책임을 지겠습니다" },
+          { tag: "요청", en: "Is there any way to resolve this?", ko: "이 문제를 해결할 방법이 있을까요?" },
+          { tag: "항의", en: "I'd like to get a refund / an exchange.", ko: "환불 / 교환을 받고 싶어요" },
+        ]
+      },
+      {
+        emoji: "🏁", title: "범용 마무리", desc: "질문 유형에 맞는 문형으로 답변 깔끔하게 끝내기",
+        phrases: [
+          { tag: "중요성 강조", en: "In general, I think [주제] is very important.", ko: "대체로, [주제]는 매우 중요하다고 생각해요" },
+          { tag: "경험담형", en: "Well, it was such a great time, and I still think about it sometimes.", ko: "정말 좋은 시간이었고, 가끔 그때 생각이 나요" },
+          { tag: "설명형(만능)", en: "So, that's basically what [주제] is like.", ko: "대략 이게 [주제]가 어떤 느낌인지예요" },
+          { tag: "설명형(이유)", en: "Overall, that's why I like it so much.", ko: "전반적으로, 그게 제가 그걸 좋아하는 이유예요" },
+          { tag: "루틴형", en: "Yeah, that's pretty much it.", ko: "네, 거의 그게 다예요" },
+          { tag: "문제해결형", en: "In the end, it worked out fine.", ko: "결국엔 잘 해결됐어요" },
+        ]
+      },
+    ];
+
+    function goPhrases() {
+      screenStack.push('home');
+      renderPhrases();
+      showScreen('phrases');
+    }
+
+    function renderPhrases() {
+      document.getElementById('phrases-list').innerHTML = PHRASES.map((cat, ci) => `
+        <details class="phrase-section" open>
+          <summary>
+            <span>${cat.emoji}</span>
+            <span>${cat.title}<span class="phrase-section-desc">${cat.desc}</span></span>
+          </summary>
+          <div class="phrase-items">
+            ${cat.phrases.map(p => `
+              <div class="phrase-item">
+                <div class="phrase-tag">${p.tag}</div>
+                <div class="phrase-en">${p.en}</div>
+                <div class="phrase-ko">${p.ko}</div>
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+
+    // ── Corrections (교정 노트) ──
+    function goCorrections() {
+      screenStack.push('home');
+      renderCorrections();
+      showScreen('corrections');
+    }
+    function renderCorrections() {
+      document.getElementById('corrections-list').innerHTML = corrections.length ? corrections.map((c, i) => `
+        <div class="correction-item">
+          <div class="correction-text">
+            <div class="correction-wrong">${escapeHtml(c.wrong)}</div>
+            <div class="correction-correct">${escapeHtml(c.correct)}</div>
+          </div>
+          <button class="btn-delete-correction" onclick="deleteCorrection(${i})">삭제</button>
+        </div>`).join('') : `<p class="phrases-intro">아직 등록된 항목이 없어요. 위에서 추가해보세요.</p>`;
+    }
+    function addCorrection() {
+      const wrongInput = document.getElementById('corr-wrong-input');
+      const correctInput = document.getElementById('corr-correct-input');
+      const wrong = wrongInput.value.trim();
+      const correct = correctInput.value.trim();
+      if (!wrong || !correct) return;
+      corrections.push({ wrong, correct });
+      saveCorrections();
+      wrongInput.value = '';
+      correctInput.value = '';
+      wrongInput.focus();
+      renderCorrections();
+    }
+    function deleteCorrection(idx) {
+      corrections.splice(idx, 1);
+      saveCorrections();
+      renderCorrections();
+    }
+
+    // ── Survival Phrases ──
+    function goSurvival() {
+      screenStack.push('home');
+      renderSurvival();
+      showScreen('survival');
+    }
+
+    function renderSurvival() {
+      document.getElementById('survival-list').innerHTML = SURVIVAL_PHRASES.map((cat, ci) => `
+        <details class="phrase-section" ${ci === 0 ? 'open' : ''}>
+          <summary>
+            <span>${cat.emoji}</span>
+            <span>${cat.title}<span class="phrase-section-desc">${cat.desc}</span></span>
+          </summary>
+          <div class="phrase-items">
+            ${cat.phrases.map(p => `
+              <div class="phrase-item">
+                <div class="phrase-tag">${p.tag}</div>
+                <div class="phrase-en">${p.en}</div>
+                <div class="phrase-ko">${p.ko}</div>
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+
+    // ── Expression Notes ──
+    function goExpressions() {
+      screenStack.push('home');
+      renderExpressions();
+      showScreen('expressions');
+    }
+
+    function renderExprExamples(example) {
+      const list = Array.isArray(example) ? example : [example];
+      return list.map(e => `<div class="expr-example">예: "${e}"</div>`).join('');
+    }
+
+    function renderExpressions() {
+      document.getElementById('expr-list').innerHTML = EXPRESSIONS.map(x => `
+        <div class="expr-card">
+          <div class="expr-title">${x.expression}</div>
+          ${x.meaning ? `<div class="expr-meaning">${x.meaning}</div>` : ''}
+          ${x.description ? `<div class="expr-desc">${x.description}</div>` : ''}
+          ${x.example ? renderExprExamples(x.example) : ''}
+          ${x.nuance ? `<div class="expr-nuance">💬 ${x.nuance}</div>` : ''}
+        </div>`).join('');
+    }
+
+    // ── Patterns 72 ──
+    function goPatterns() {
+      screenStack.push('home');
+      renderPatterns();
+      showScreen('patterns');
+    }
+
+    function renderPatterns() {
+      document.getElementById('patterns-list').innerHTML = PATTERNS.map((sec, si) => `
+        <details class="phrase-section" ${si === 0 ? 'open' : ''}>
+          <summary>
+            <span>${sec.section}</span>
+            <span>${sec.title}<span class="phrase-section-desc">${sec.subtitle}</span></span>
+          </summary>
+          <div class="pattern-items">
+            ${sec.patterns.map(p => `
+              <div class="pattern-card">
+                <div class="pattern-row1">
+                  <span class="pattern-idx">${p.idx}</span>
+                  <span class="pattern-label">${p.label}</span>
+                </div>
+                <div class="pattern-kr">${p.kr}</div>
+                <div class="pattern-en">${p.en}</div>
+                ${p.example ? `
+                  <div class="pattern-example">
+                    <div class="pattern-example-en">${p.example.en}</div>
+                    <div class="pattern-example-ko">${p.example.ko}</div>
+                  </div>` : ''}
+              </div>`).join('')}
+          </div>
+        </details>`).join('');
+    }
+
+    // ── Mock Test (에바 프롬프트, 임시 기능) ──
+    const MOCK_TEST_PROMPT = `You are Ava, an official OPIc (Oral Proficiency Interview - computer) examiner. Run a full simulated
+OPIc test with me. Follow these rules exactly.
+
+[MY ACTUAL BACKGROUND SURVEY ANSWERS]
+- Work experience: "No work experience" was selected on purpose (even though I do work) — this is a
+  deliberate strategy to reduce the number of work-related questions. Do NOT ask detailed
+  job/workplace questions. If a work question would normally come up, skip it or replace it with
+  another selected topic.
+- Not a student
+- Living situation: living with family (spouse/child/other family members) in a house or apartment
+- Leisure activities selected: watching movies, going to concerts, going to parks, going to the
+  beach, going to pubs/bars, going to cafes/coffee shops
+- Hobbies/interests selected: listening to music
+- Exercise selected: walking, jogging
+- Vacation/trips selected: staycation (spending vacation at home), domestic travel
+- Do NOT drink alcohol — if a pub/bar question comes up, I go but don't drink; answer naturally
+  around that (e.g., going with friends, ordering non-alcoholic drinks, enjoying the atmosphere)
+
+[SELECTED TOPIC POOL — matches my survey answers above; only use this pool for stage 2 below]
+My survey answers fall into 5 independent categories. In a REAL OPIc test, only ONE topic per
+category is ever tested in a single session — never two topics from the same category. When
+picking topics for stage 2, always choose topics from TWO DIFFERENT categories:
+- Living situation: Home & neighborhood (living with family)
+- Leisure activities (pick at most ONE per session — never combine two of these): movies
+  (including a favorite actor/movie theater), concerts, parks, beaches, pubs/bars (non-drinker
+  angle), cafes
+- Hobbies/interests: music (listening habits)
+- Exercise: walking/jogging (treat as one combined exercise topic)
+- Vacation/trips (pick at most ONE per session — never combine): staycation (spending vacation
+  at home), domestic travel
+
+Roleplay pool (also selected topics, independent of the categories above): furniture roleplay,
+restaurant roleplay, shopping roleplay, holiday-related roleplay.
+Do NOT ask about: family life/routines as a standalone topic, recycling, or detailed job/workplace
+questions (per the "no work experience" survey answer above).
+
+[SURPRISE TOPIC POOL — 돌발주제: topics I did NOT select in the survey]
+Use ONLY this pool for the surprise-topic stage (stage 3 below) — never reuse a topic from the
+selected pool above and just frame it differently. A real 돌발 question is a topic outside my
+survey, not a different angle on something I already picked:
+technology/electronic devices, furniture, banks, holidays (Korean holidays), weather, geography
+(mountains/rivers/seas of Korea), general free time (broader than the specific leisure activities
+I selected), fashion/clothing, transportation, local neighborhood gatherings or events.
+
+[TEST STRUCTURE — follow real OPIc composition rules]
+1. Self-introduction (1 question)
+2. 2 topics from the SELECTED topic pool above, picked from TWO DIFFERENT categories (never two
+   topics from the same category — e.g., don't ask both domestic travel and staycation, or both
+   cafes and beaches, in the same session), each as part of a combo set — for each topic, ask 3
+   linked questions in sequence (e.g., description → habit/routine → a specific past experience),
+   one at a time, waiting for my answer each time
+3. 1 unexpected/surprise topic combo (오픽 돌발주제 style) — 2-3 linked questions, drawn from the
+   SURPRISE topic pool above (i.e., a topic I did NOT select in my survey) — not the selected pool
+4. 1 roleplay set — 2-3 linked parts: (a) an initial task like asking 3-4 questions or making a
+   request, (b) a twist or follow-up like an unexpected problem to solve or a phone call to explain
+   a situation
+Total: roughly 10-12 questions across these stages (a real OPIc session runs about 15 questions,
+but we'll do a shorter practice set).
+
+[DELIVERY RULES]
+1. Speak ONLY in English, in a natural, conversational spoken style — like a real OPIc recording,
+   not written text.
+2. Ask exactly ONE question at a time, including within combo sets — ask one part, wait for my
+   answer, then ask the next part.
+3. After I answer, respond according to the feedback mode I chose (see [FEEDBACK MODE] below),
+   then move to the next question.
+4. Do not tell me in advance which stage (self-intro/combo/roleplay/etc.) is coming.
+5. Start with a short orientation in English. As part of that orientation, ask me the [FEEDBACK MODE]
+   question below and wait for my answer, then go straight into the self-introduction question.
+
+[FEEDBACK MODE — ask this during your orientation, before the first question]
+Ask: "Would you like quick feedback after every answer, or only the full report at the end, like
+the real test?" Wait for my choice and follow it for the rest of the session:
+- Per-answer feedback: after each of my answers, give a short 1-2 sentence note (one thing that
+  worked, one specific fix), then briefly acknowledge and move to the next question. Keep it brief
+  — don't turn it into a full lesson each time.
+- End-only feedback: give NO feedback during the test — just a brief acknowledgment ("Thank you.
+  Now, here's the next question.") and move on. Save everything for the end.
+Either way, still give the full structured report in [END-OF-TEST FEEDBACK] after the last question.
+
+[END-OF-TEST FEEDBACK — after the last question, regardless of which feedback mode I chose above]
+Give a structured report:
+
+1. **Overall estimated grade range** (e.g., IM3 / IH / AL) with one-line reasoning.
+2. **ACTFL 9-item scored table** — for EACH of my answers, score 1-10 on these 9 points, with a
+   one-line note per item:
+   1) Did I answer all parts of the question that was asked?
+   2) Did I state the main point/answer upfront before going into details? (두괄식)
+   3) Did I understand and correctly address the situation/task?
+   4) Were all my sentences actually relevant to the question (no off-topic filler)?
+   5) Did I use tenses (past/present/future) accurately and appropriately?
+   6) Did I use appropriate connectors/transitions between sentences?
+   7) Did I avoid repeating the same nouns and connectors too much?
+   8) Did I self-correct naturally when I made a mistake (rather than leaving it or freezing)?
+   9) Based on sentence flow/phrasing, would pacing and pauses sound natural if spoken aloud?
+3. **Top 3 recurring issues** across all answers — quote my exact phrases and show a better
+   alternative for each.
+4. **One model answer**, rewritten in natural spoken English, for the question I scored lowest on
+   overall.
+5. Do NOT rewrite all my answers — only the one weakest one, plus the specific phrase-level fixes
+   in #3.
+
+Begin now with your orientation and the first question.`;
+
+    function goMockTest() {
+      screenStack.push('home');
+      renderMockTest();
+      showScreen('mocktest');
+    }
+
+    function renderMockTest() {
+      document.getElementById('mocktest-prompt').textContent = MOCK_TEST_PROMPT;
+    }
+
+    function copyMockTestPrompt() {
+      const btn = document.getElementById('mocktest-copy-btn');
+      const ta = document.createElement('textarea');
+      ta.value = MOCK_TEST_PROMPT;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch {}
+      document.body.removeChild(ta);
+      const original = btn.textContent;
+      btn.textContent = ok ? '✅ 복사됐어요' : '❌ 복사 실패 — 아래 텍스트를 직접 선택해서 복사해주세요';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    }
+
+    // ── Init ──
+    loadProgress();
+    loadHighlights();
+    loadCorrections();
+    renderHome();
+
+    const deepLinkTopicId = parseInt(new URLSearchParams(location.search).get('topic'), 10);
+    if (!isNaN(deepLinkTopicId) && TOPICS.some(t => t.id === deepLinkTopicId)) {
+      goTopic(deepLinkTopicId);
+    }
+  </script>
+</body>
+</html>
